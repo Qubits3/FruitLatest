@@ -1,0 +1,195 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home page</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="container-fluid">
+    <h1 class="text-center"> My Favourite Fruit </h1>
+    <div class="row justify-content-center">
+      <div class="col-md-6 border">
+        <div class="row m-2">
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#tab1" data-bs-toggle="tab" data-bs-target="#tab1">
+                Form</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#tab2" data-bs-toggle="tab" data-bs-target="#tab2">Dashboard</a>
+            </li>
+          </ul>
+        </div>
+        <div class="tab-content">
+          <div id="tab1" class="tab-pane fade show active">
+            <form id="form1">
+              <div class="mb-3">
+                <label for="name" class="form-label">Enter your name:</label>
+                <input type="text" class="form-control" id="name" aria-describedby="name" placeholder="Your name..."
+                  required>
+
+              </div>
+              <p>Select your favourite fruit:</p>
+              <div class="mb-3">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"
+                    value="Apple" required>
+                  <label class="form-check-label" for="flexRadioDefault1">
+                    <img src="apple.jpg" alt="Apple" width="100px" height="100px">
+                    Apple
+                  </label>
+                </div>
+
+                <div class="form-check  form-check-inline">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"
+                    value="Orange" required>
+                  <label class="form-check-label" for="flexRadioDefault2">
+                    <img src="orange.jpg" alt="Orange" width="100px" height="100px">
+                    Orange
+                  </label>
+                </div>
+
+                <div class="form-check  form-check-inline">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3"
+                    value="Pineapple" required>
+                  <label class="form-check-label" for="flexRadioDefault3">
+                    <img src="pineapple.jpg" alt="Pineapple" width="100px" height="100px">
+                    Pineapple
+                  </label>
+                </div>
+
+                <div class="form-check  form-check-inline">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault4"
+                    value="Pear" required>
+                  <label class="form-check-label" for="flexRadioDefault4">
+                    <img src="pear.jpg" alt="Pear" width="100px" height="100px">
+                    Pear
+                  </label>
+                </div>
+
+                <div class="form-check  form-check-inline">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault5"
+                    value="Papaya" required>
+                  <label class="form-check-label" for="flexRadioDefault5">
+                    <img src="papaya.jpg" alt="Papaya" width="100px" height="100px">
+                    Papaya
+                  </label>
+                </div>
+              </div>
+              <div class="text-center">
+                <button type="submit" class="btn btn-success" id="submit">Save My Favourite Fruit</button>
+              </div>
+            </form>
+            <div id="thankyou" class="d-none text-center m-2">
+              <h1>Thank you for your response!</h1>
+              <button class="btn btn-success" id="ok">OK</button>
+            </div>
+          </div>
+          <div id="tab2" class="tab-pane fade">
+            <div class="h2"> Most Liked Fruit: <span id="most" class="text-danger"> </span></div>
+            <div class="h2">Least Liked Fruit: <span id="least" class="text-danger"> </span></div>
+            <div id="analysisGraph"> </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Bootstrap JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <script>
+    let form1 = document.getElementById("form1");
+    let thankyou = document.getElementById("thankyou");
+    let submit = document.getElementById("submit");
+    let ok = document.getElementById("ok");
+    ok.addEventListener("click", showForm);
+
+    let most = document.getElementById("most");
+    let least = document.getElementById("least");
+
+
+    function showForm() {
+      window.location.href = "index.html";
+    }
+
+    submit.addEventListener("click", storeResult);
+
+    function storeResult(event) {
+      if (form1.checkValidity()) {
+        let name = document.getElementById("name").value;
+        let fruitName = document.querySelector('input[name="flexRadioDefault"]:checked').value;
+        // Create a FormData object and append form data
+        const formData = {
+          fruit: fruitName
+        };
+        // Send form data to the server using fetch
+        fetch('/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        })
+          .then(response => response.text())
+          .then(message => {
+            console.log(message);
+            alert('Form submitted successfully!');
+          })
+          .catch(error => {
+            console.error('Error submitting form:', error);
+            alert('Error submitting form. Please try again.');
+          });
+
+        form1.classList.add("d-none");
+        form1.classList.remove("d-block");
+        thankyou.classList.remove("d-none");
+        thankyou.classList.add("d-block");
+        event.preventDefault();
+      }
+      else {
+        form1.classList.add('was-validated');
+      }
+    }
+    let array = [], labels = [];
+    fetch('/getCSVData')
+      .then(response => response.json())
+      .then(data => {
+        for (value in data) {
+          array.push(data[value]);
+          labels.push(value);
+        }
+        const entries = Object.entries(data);
+
+        const maxLikes = Math.max(...entries.map(entry => entry[1]));
+        const mostLiked = entries.filter(entry => entry[1] === maxLikes).map(entry => entry[0]);
+
+        // Find the least liked flowers
+        const minLikes = Math.min(...entries.map(entry => entry[1]));
+        const leastLiked = entries.filter(entry => entry[1] === minLikes).map(entry => entry[0]);
+        most.textContent = mostLiked;
+        least.textContent = leastLiked;
+        let analysisGraph = document.getElementById("analysisGraph");
+        let chart = "{type: 'bar', data: {datasets: [{data: [" + array.toString() + "], backgroundColor: [ 'rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(255, 235, 59)', 'rgb(50, 205, 50)' ], label: 'Data',}, ], labels: ['" + labels.join("','") + "'], }, options: { title: { display: true, text: 'Favourite fruit', }, }, } ";
+        let chartUrl = "https://quickchart.io/chart?c=" + chart;
+        const image = document.createElement("img");
+        image.src = chartUrl;
+        image.alt = "Result chart";
+        image.classList.add("img-fluid");
+        analysisGraph.appendChild(image);
+      })
+      .catch(error => {
+        console.error('Error fetching CSV data:', error);
+      });
+
+  </script>
+</body>
+
+</html>
